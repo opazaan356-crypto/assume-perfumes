@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ASSUME - Premium Perfumes</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Poppins:wght@200;300;400;500;600;700&display=swap');
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #0f0f11;
+            color: #e5e7eb;
+            scroll-behavior: smooth;
+        }
+        .serif-font {
+            font-family: 'Playfair Display', serif;
+        }
+        .glow-hover:hover {
+            box-shadow: 0 0 15px rgba(212, 163, 89, 0.6);
+            transform: translateY(-5px);
+            transition: all 0.4s ease;
+        }
+        .gradient-text {
+            background: linear-gradient(45deg, #d4a359, #f3e5ab);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Preloader Screen */
+        #preloader {
+            position: fixed;
+            inset: 0;
+            background-color: #0f0f11;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 0.5s ease, visibility 0.5s ease;
+        }
+        .progress-bar-container {
+            width: 200px;
+            height: 4px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 2px;
+            overflow: hidden;
+            margin-top: 20px;
+        }
+        .progress-bar-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, #d4a359, #f3e5ab);
+            animation: fillProgress 4s linear forwards;
+        }
+        @keyframes fillProgress {
+            0% { width: 0%; }
+            100% { width: 100%; }
+        }
+        /* Custom scrollbar for Cart and History */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: rgba(255,255,255,0.02);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #d4a359;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body class="overflow-x-hidden">
+
+    <div id="preloader">
+        <div class="text-4xl font-bold tracking-widest serif-font gradient-text animate__animated animate__pulse animate__infinite">ASSUME</div>
+        <p class="text-xs text-gray-500 uppercase tracking-widest mt-2">Loading Luxury...</p>
+        <div class="progress-bar-container">
+            <div class="progress-bar-fill"></div>
+        </div>
+    </div>
+
+    <div id="orderSuccessOverlay" class="fixed inset-0 bg-black/90 z-[99999] hidden flex flex-col items-center justify-center text-center p-4">
+        <div class="bg-[#18181c] border border-[#d4a359]/30 p-8 rounded-2xl max-w-sm w-full animate__animated animate__zoomIn flex flex-col items-center">
+            <div id="successIcon" class="w-20 h-20 bg-emerald-500/10 border-2 border-emerald-500 rounded-full flex items-center justify-center mb-4 text-emerald-500 text-4xl animate__animated animate__bounceIn">
+                <i class="fa-solid fa-check"></i>
+            </div>
+            <h3 id="successTitle" class="text-2xl font-bold serif-font text-white mb-2">Order Placed!</h3>
+            <p id="successMsg" class="text-gray-400 text-sm">Your order has been placed successfully.</p>
+        </div>
+    </div>
+
+    <header class="fixed top-0 left-0 w-full z-50 bg-black/80 backdrop-blur-md border-b border-white/10 px-6 py-4 flex justify-between items-center animate__animated animate__fadeInDown">
+        <div class="text-3xl font-bold tracking-widest serif-font gradient-text">ASSUME</div>
+        
+        <nav class="hidden md:flex space-x-8 text-sm uppercase tracking-wider">
+            <a href="#home" class="hover:text-[#d4a359] transition">Home</a>
+            <a href="#collection" class="hover:text-[#d4a359] transition">Collection</a>
+            <a href="#contact" class="hover:text-[#d4a359] transition">Contact</a>
+        </nav>
+
+        <div class="flex items-center gap-4">
+            <button onclick="toggleCartSidebar(true)" class="relative p-2.5 bg-white/5 rounded-full text-white border border-white/10 hover:border-[#d4a359] transition-all">
+                <i class="fa-solid fa-bag-shopping text-lg"></i>
+                <span id="cartCountBadge" class="absolute -top-1 -right-1 bg-[#d4a359] text-black text-[10px] font-bold w-5 h-5 rounded-full flex items-center justify-center hidden">0</span>
+            </button>
+
+            <button id="authBtn" onclick="openAuthModal()" class="bg-[#d4a359] text-black px-5 py-2 rounded-full font-semibold text-sm hover:bg-white transition-all duration-300 flex items-center gap-2">
+                <i class="fa-solid fa-user-plus"></i> Sign Up
+            </button>
+        </div>
+    </header>
+
+    <div id="cartSidebar" class="fixed top-0 right-0 h-full w-full max-w-md bg-[#121214] border-l border-white/10 z-[100] transform translate-x-full transition-transform duration-300 flex flex-col hidden">
+        <div class="p-6 border-b border-white/10 flex justify-between items-center">
+            <h3 class="text-xl font-bold serif-font text-white flex items-center gap-2"><i class="fa-solid fa-bag-shopping text-[#d4a359]"></i> Your Shopping Cart</h3>
+            <button onclick="toggleCartSidebar(false)" class="text-gray-400 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
+        </div>
+
+        <div id="cartItemsList" class="flex-grow p-6 overflow-y-auto space-y-4">
+            <p class="text-gray-500 text-center py-10">Your cart is empty.</p>
+        </div>
+
+        <div class="p-6 border-t border-white/10 bg-black/40 space-y-4">
+            <div class="flex justify-between text-lg font-semibold">
+                <span class="text-gray-400">Total Bill:</span>
+                <span id="cartTotalPrice" class="text-[#d4a359]">Rs. 0</span>
+            </div>
+            <button onclick="openCartCheckout()" class="w-full bg-[#d4a359] text-black font-bold p-3 rounded-lg hover:bg-white transition-all uppercase tracking-wider text-sm">Proceed to Checkout</button>
+        </div>
+    </div>
+
+    <section id="home" class="min-h-screen flex flex-col justify-center items-center text-center px-4 pt-20 relative bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-yellow-900/20 via-black to-black">
+        <div class="absolute inset-0 bg-cover bg-center opacity-20" style="background-image: url('https://images.unsplash.com/photo-1547887537-6158d64c35b3?auto=format&fit=crop&w=1920&q=80');"></div>
+        <div class="relative z-10 max-w-4xl animate__animated animate__fadeInUp">
+            <span class="text-[#d4a359] uppercase tracking-widest text-sm font-semibold mb-3 block">Luxury Scent Experience</span>
+            <h1 class="text-5xl md:text-8xl font-bold serif-font mb-6 leading-tight">Define Your Presence With <span class="gradient-text">ASSUME</span></h1>
+            <p class="text-gray-400 text-lg md:text-xl max-w-2xl mx-auto mb-8">Crafted for the bold, the elegant, and the unforgettable. Experience premium long-lasting perfumes.</p>
+            <a href="#collection" class="bg-transparent border-2 border-[#d4a359] text-[#d4a359] hover:bg-[#d4a359] hover:text-black px-8 py-3 rounded-full font-bold uppercase tracking-wider transition-all duration-500">Explore Collection</a>
+        </div>
+    </section>
+
+    <section id="collection" class="py-24 px-6 md:px-12 max-w-7xl mx-auto">
+        <div class="text-center mb-16">
+            <h2 class="text-4xl md:text-6xl font-bold serif-font gradient-text mb-4">Our Signature Collection</h2>
+            <p class="text-gray-400">Discover your signature scent from our exclusive 10 masterpieces</p>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="perfumeContainer"></div>
+    </section>
+
+    <section id="contact" class="py-20 px-6 bg-black/50 border-t border-white/5">
+        <div class="max-w-4xl mx-auto">
+            <div class="text-center mb-12">
+                <h2 class="text-4xl font-bold serif-font gradient-text mb-3">Contact Us</h2>
+                <p class="text-gray-400 text-sm">Have any questions or need premium assistance? Reach out to us.</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+                <div class="p-6 bg-[#18181c] rounded-xl border border-white/5 hover:border-[#d4a359]/30 transition-all duration-300">
+                    <div class="w-12 h-12 bg-[#d4a359]/10 rounded-full flex items-center justify-center mx-auto mb-4 text-[#d4a359]">
+                        <i class="fa-solid fa-phone text-xl"></i>
+                    </div>
+                    <h4 class="font-bold text-white mb-2">Phone</h4>
+                    <p class="text-gray-400 text-sm">+92 332 2528535</p>
+                </div>
+                
+                <div class="p-6 bg-[#18181c] rounded-xl border border-white/5 hover:border-[#d4a359]/30 transition-all duration-300">
+                    <div class="w-12 h-12 bg-[#d4a359]/10 rounded-full flex items-center justify-center mx-auto mb-4 text-[#d4a359]">
+                        <i class="fa-solid fa-envelope text-xl"></i>
+                    </div>
+                    <h4 class="font-bold text-white mb-2">Email</h4>
+                    <p class="text-gray-400 text-sm">info@assumeperfumes.com</p>
+                </div>
+
+                <div class="p-6 bg-[#18181c] rounded-xl border border-white/5 hover:border-[#d4a359]/30 transition-all duration-300">
+                    <div class="w-12 h-12 bg-[#d4a359]/10 rounded-full flex items-center justify-center mx-auto mb-4 text-[#d4a359]">
+                        <i class="fa-solid fa-location-dot text-xl"></i>
+                    </div>
+                    <h4 class="font-bold text-white mb-2">Location</h4>
+                    <p class="text-gray-400 text-sm">Karachi, Pakistan</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="py-8 text-center text-xs text-gray-600 border-t border-white/5">
+        <p>&copy; 2026 ASSUME Perfumes. All Rights Reserved.</p>
+    </footer>
+
+    <div id="authModal" class="fixed inset-0 bg-black/90 z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-[#18181c] border border-white/10 p-8 rounded-2xl max-w-md w-full relative animate__animated animate__zoomIn">
+            <button onclick="closeAuthModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
+            <div class="text-center">
+                <h3 class="text-2xl font-bold serif-font mb-2">Create Your Account</h3>
+                <p class="text-gray-400 text-sm mb-6">Join ASSUME to track your orders and get custom offers.</p>
+                
+                <div class="mb-4 text-left">
+                    <label class="block text-xs uppercase tracking-wider text-gray-400 mb-2">Email Address</label>
+                    <input type="email" id="manualEmail" oninput="checkEmailInput()" placeholder="name@example.com" class="w-full bg-black border border-white/10 rounded-lg p-3 text-white focus:outline-none focus:border-[#d4a359]">
+                    
+                    <button id="manualSignUpBtn" onclick="handleManualSignUp()" class="hidden w-full mt-4 bg-[#d4a359] text-black font-semibold p-3 rounded-lg hover:bg-white transition-all duration-300">
+                        Sign Up
+                    </button>
+                </div>
+
+                <div class="relative flex py-3 items-center">
+                    <div class="flex-grow border-t border-white/10"></div>
+                    <span class="flex-shrink mx-4 text-gray-400 text-xs uppercase">Or Sign up with</span>
+                    <div class="flex-grow border-t border-white/10"></div>
+                </div>
+
+                <button onclick="simulateGoogleLogin()" class="w-full bg-white text-black font-semibold p-3 rounded-lg flex items-center justify-center gap-3 hover:bg-gray-200 transition-all">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_Logo.svg" class="w-5" alt="Google">
+                    Sign in with Google
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div id="detailsModal" class="fixed inset-0 bg-black/95 z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-[#18181c] border border-white/10 p-8 rounded-2xl max-w-2xl w-full relative animate__animated animate__fadeInUp flex flex-col md:flex-row gap-6">
+            <button onclick="closeDetailsModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
+            <div class="w-full md:w-1/2">
+                <img id="detailImg" src="" class="w-full h-64 object-cover rounded-xl border border-white/10" alt="">
+            </div>
+            <div class="w-full md:w-1/2 flex flex-col justify-between">
+                <div>
+                    <h3 id="detailName" class="text-3xl font-bold serif-font mb-2 text-[#d4a359]">Product Name</h3>
+                    <p id="detailPrice" class="text-xl font-bold mb-4 text-white">Rs. 2,500</p>
+                    <p id="detailDesc" class="text-gray-400 text-sm leading-relaxed mb-6">Perfume description...</p>
+                </div>
+                <button id="detailBuyBtn" class="w-full bg-[#d4a359] text-black font-bold p-3 rounded-lg hover:bg-white transition-all uppercase tracking-wider">Buy Now</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="checkoutModal" class="fixed inset-0 bg-black/90 z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-[#18181c] border border-white/10 p-8 rounded-2xl max-w-md w-full relative animate__animated animate__fadeInUp">
+            <button onclick="closeCheckoutModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
+            <h3 class="text-2xl font-bold serif-font mb-6 text-[#d4a359]">Delivery Details</h3>
+            
+            <form id="checkoutForm" onsubmit="handlePlaceOrder(event)">
+                <input type="hidden" id="checkoutItemsDetails" name="Ordered Items">
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-xs uppercase tracking-wider text-gray-400 mb-1">Full Name</label>
+                        <input type="text" id="custName" name="Customer Name" required class="w-full bg-black border border-white/10 rounded-lg p-2.5 text-white focus:outline-none focus:border-[#d4a359]">
+                    </div>
+                    <div>
+                        <label class="block text-xs uppercase tracking-wider text-gray-400 mb-1">City</label>
+                        <input type="text" id="custCity" name="City" required class="w-full bg-black border border-white/10 rounded-lg p-2.5 text-white focus:outline-none focus:border-[#d4a359]">
+                    </div>
+                    <div>
+                        <label class="block text-xs uppercase tracking-wider text-gray-400 mb-1">Full Delivery Address</label>
+                        <input type="text" id="custAddress" name="Address" required class="w-full bg-black border border-white/10 rounded-lg p-2.5 text-white focus:outline-none focus:border-[#d4a359]">
+                    </div>
+                    <div>
+                        <label class="block text-xs uppercase tracking-wider text-gray-400 mb-1">Phone Number</label>
+                        <input type="tel" id="custPhone" name="Phone" required class="w-full bg-black border border-white/10 rounded-lg p-2.5 text-white focus:outline-none focus:border-[#d4a359]">
+                    </div>
+                </div>
+                <button type="submit" id="submitBtn" class="w-full bg-[#d4a359] text-black font-bold p-3 mt-6 rounded-lg hover:bg-white transition-all uppercase tracking-wider">Place Order</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="profileModal" class="fixed inset-0 bg-black/95 z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-[#18181c] border border-white/10 p-8 rounded-2xl max-w-lg w-full relative animate__animated animate__fadeInUp">
+            <button onclick="closeProfileModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
+            
+            <div class="text-center mb-6">
+                <div class="w-20 h-20 bg-[#d4a359]/20 border border-[#d4a359] rounded-full flex items-center justify-center mx-auto mb-3">
+                    <i class="fa-solid fa-user text-3xl text-[#d4a359]"></i>
+                </div>
+                <h3 id="profileUserName" class="text-2xl font-bold serif-font text-white">Guest User</h3>
+                <p id="profileUserEmail" class="text-gray-400 text-sm">guest@example.com</p>
+            </div>
+
+            <hr class="border-white/10 my-4">
+
+            <div>
+                <h4 class="text-md font-bold mb-3 text-[#d4a359]"><i class="fa-solid fa-box-open mr-2"></i>Your Order History</h4>
+                <div id="orderContainer" class="space-y-4 max-h-48 overflow-y-auto pr-2">
+                    <p class="text-gray-500 text-center py-4">No orders placed yet.</p>
+                </div>
+            </div>
+
+            <div class="mt-6 border-t border-white/10 pt-4">
+                <button onclick="handleLogout()" class="w-full bg-red-600/10 border border-red-500/40 text-red-500 font-bold p-3 rounded-lg hover:bg-red-600 hover:text-white transition-all uppercase tracking-wider text-sm">
+                    <i class="fa-solid fa-right-from-bracket mr-2"></i> Logout From Account
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const perfumes = [
+            { id: 1, name: "Midnight Oud", price: 2500, img: "https://images.unsplash.com/photo-1547887537-6158d64c35b3?auto=format&fit=crop&w=600&q=80", desc: "A deep mystery of premium dark agarwood blended with patchouli and smoky incense for an unforgettable impact." },
+            { id: 2, name: "Royal Rose", price: 2500, img: "https://images.unsplash.com/photo-1594035910387-fea47794261f?auto=format&fit=crop&w=600&q=80", desc: "Fresh velvety roses infused with premium sweet honey and rich amber base." },
+            { id: 3, name: "Sandalwood Gold", price: 2500, img: "https://images.unsplash.com/photo-1523293182086-7651a899d37f?auto=format&fit=crop&w=600&q=80", desc: "A creamy and warm blend of pure sandalwood, vanilla, and spicy cardamom." },
+            { id: 4, name: "Aqua Marine", price: 2300, img: "https://images.unsplash.com/photo-1592945403244-b3fbafd7f539?auto=format&fit=crop&w=600&q=80", desc: "A fresh oceanic breeze crafted with crisp sea salt, seaweeds, and zesty bergamot." },
+            { id: 5, name: "Amber Whisper", price: 2300, img: "https://images.unsplash.com/photo-1588405748373-122b2321bc31?auto=format&fit=crop&w=600&q=80", desc: "Exotic warm amber with subtle sweet notes of musk and dark berries." },
+            { id: 6, name: "Velvet Jasmine", price: 2000, img: "https://images.unsplash.com/photo-1595425970377-c9703cf48b6d?auto=format&fit=crop&w=600&q=80", desc: "Rich floral scent capturing the purest evening-blooming jasmines." },
+            { id: 7, name: "Citrus Bloom", price: 1800, img: "https://images.unsplash.com/photo-1541643600914-78b084683601?auto=format&fit=crop&w=600&q=80", desc: "Energizing explosion of sweet orange, grapefruit, and fresh minty leaves." },
+            { id: 8, name: "Vanilla Secret", price: 2200, img: "https://images.unsplash.com/photo-1515688594390-b649af70d282?auto=format&fit=crop&w=600&q=80", desc: "Exotic Madagascar vanilla mixed with dark cocoa beans and white musk." },
+            { id: 9, name: "Cedar & Spice", price: 2400, img: "https://images.unsplash.com/photo-1594035910387-fea47794261f?auto=format&fit=crop&w=600&q=80", desc: "Bold, masculine cedarwood drydown paired with rich black pepper." },
+            { id: 10, name: "Imperial Musk", price: 2600, img: "https://images.unsplash.com/photo-1523293182086-7651a899d37f?auto=format&fit=crop&w=600&q=80", desc: "The ultimate royalty. Pristine white musk combined with rare spices." }
+        ];
+
+        let currentUser = null;
+        let orders = [];
+        let cart = [];
+
+        const FORMSPREE_ENDPOINT = "https://formspree.io/f/xaqrenbn";
+
+        function renderPerfumes() {
+            const container = document.getElementById('perfumeContainer');
+            container.innerHTML = '';
+            perfumes.forEach((p, idx) => {
+                container.innerHTML += `
+                    <div class="bg-[#18181c] border border-white/10 rounded-2xl overflow-hidden glow-hover animate__animated animate__fadeInUp" style="animation-delay: ${idx * 0.1}s">
+                        <div class="relative overflow-hidden group h-80">
+                            <img src="${p.img}" alt="${p.name}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+                            <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                                <span class="text-[#d4a359] text-lg font-semibold tracking-wider uppercase">ASSUME Luxury</span>
+                            </div>
+                        </div>
+                        <div class="p-6">
+                            <h3 class="text-2xl font-bold serif-font text-white mb-1">${p.name}</h3>
+                            <p class="text-[#d4a359] text-lg font-semibold mb-5">Rs. ${p.price.toLocaleString()}</p>
+                            <div class="flex flex-col gap-2">
+                                <div class="grid grid-cols-2 gap-2">
+                                    <button onclick="openDetails(${p.id})" class="border border-white/20 text-white py-2 rounded-lg hover:border-[#d4a359] hover:text-[#d4a359] transition-all text-xs font-medium">See Details</button>
+                                    <button onclick="handleDirectBuy(${p.id})" class="bg-white text-black py-2 rounded-lg hover:bg-gray-200 transition-all text-xs font-bold">Buy Now</button>
+                                </div>
+                                <button onclick="addToCart(${p.id})" class="w-full bg-[#d4a359] text-black py-2.5 rounded-lg hover:bg-[#f3e5ab] font-bold text-xs flex items-center justify-center gap-2 tracking-wider uppercase transition-all">
+                                    <i class="fa-solid fa-cart-plus"></i> Add To Cart
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        // Cart Mechanism Functions
+        function toggleCartSidebar(open) {
+            const sidebar = document.getElementById('cartSidebar');
+            if(open) {
+                sidebar.classList.remove('hidden');
+                setTimeout(() => sidebar.classList.remove('translate-x-full'), 10);
+            } else {
+                sidebar.classList.add('translate-x-full');
+                setTimeout(() => sidebar.classList.add('hidden'), 300);
+            }
+        }
+
+        function addToCart(id) {
+            if(!currentUser) {
+                alert("Please Sign Up first to add items to your cart.");
+                openAuthModal();
+                return;
+            }
+            const p = perfumes.find(item => item.id === id);
+            const exist = cart.find(item => item.id === id);
+
+            if(exist) {
+                exist.qty += 1;
+            } else {
+                cart.push({ ...p, qty: 1 });
+            }
+            updateCartUI();
+            toggleCartSidebar(true);
+        }
+
+        function changeQty(id, delta) {
+            const item = cart.find(i => i.id === id);
+            if(!item) return;
+            item.qty += delta;
+            if(item.qty <= 0) {
+                cart = cart.filter(i => i.id !== id);
+            }
+            updateCartUI();
+        }
+
+        function updateCartUI() {
+            const listContainer = document.getElementById('cartItemsList');
+            const badge = document.getElementById('cartCountBadge');
+            const totalDisplay = document.getElementById('cartTotalPrice');
+            
+            let totalItems = 0;
+            let totalPrice = 0;
+
+            if(cart.length === 0) {
+                listContainer.innerHTML = '<p class="text-gray-500 text-center py-10">Your cart is empty.</p>';
+                badge.classList.add('hidden');
+                totalDisplay.innerText = "Rs. 0";
+                return;
+            }
+
+            listContainer.innerHTML = '';
+            cart.forEach(item => {
+                totalItems += item.qty;
+                totalPrice += (item.price * item.qty);
+
+                listContainer.innerHTML += `
+                    <div class="flex items-center gap-4 bg-white/5 p-3 rounded-xl border border-white/5">
+                        <img src="${item.img}" class="w-12 h-12 object-cover rounded-lg border border-white/10" alt="${item.name}">
+                        <div class="flex-grow">
+                            <h4 class="text-sm font-semibold text-white">${item.name}</h4>
+                            <p class="text-xs text-[#d4a359]">Rs. ${item.price.toLocaleString()}</p>
+                        </div>
+                        <div class="flex items-center gap-2 border border-white/10 bg-black rounded-md px-2 py-1">
+                            <button onclick="changeQty(${item.id}, -1)" class="text-gray-400 hover:text-white text-xs"><i class="fa-solid fa-minus"></i></button>
+                            <span class="text-white text-xs font-bold px-1">${item.qty}</span>
+                            <button onclick="changeQty(${item.id}, 1)" class="text-gray-400 hover:text-white text-xs"><i class="fa-solid fa-plus"></i></button>
+                        </div>
+                    </div>
+                `;
+            });
+
+            badge.innerText = totalItems;
+            badge.classList.remove('hidden');
+            totalDisplay.innerText = `Rs. ${totalPrice.toLocaleString()}`;
+        }
+
+        function handleDirectBuy(id) {
+            if(!currentUser) {
+                alert("Please Sign Up first to complete purchase.");
+                openAuthModal();
+                return;
+            }
+            const p = perfumes.find(item => item.id === id);
+            cart = [{ ...p, qty: 1 }];
+            updateCartUI();
+            openCartCheckout();
+        }
+
+        function openCartCheckout() {
+            if(cart.length === 0) {
+                alert("Your cart is empty!");
+                return;
+            }
+            toggleCartSidebar(false);
+            
+            // Build text formatting statement for Formspree field
+            let formattedItems = cart.map(i => `${i.name} (x${i.qty}) - Rs.${(i.price*i.qty).toLocaleString()}`).join(', ');
+            document.getElementById('checkoutItemsDetails').value = formattedItems + ` | Grand Total: ${document.getElementById('cartTotalPrice').innerText}`;
+            
+            document.getElementById('checkoutModal').classList.remove('hidden');
+        }
+
+        function closeCheckoutModal() {
+            document.getElementById('checkoutModal').classList.add('hidden');
+        }
+
+        function handlePlaceOrder(event) {
+            event.preventDefault();
+            const submitBtn = document.getElementById('submitBtn');
+            submitBtn.disabled = true;
+            submitBtn.innerText = "Processing...";
+
+            const custName = document.getElementById('custName').value;
+            const custCity = document.getElementById('custCity').value;
+            const custAddress = document.getElementById('custAddress').value;
+            const custPhone = document.getElementById('custPhone').value;
+            const totalBill = document.getElementById('cartTotalPrice').innerText;
+
+            const formData = new FormData();
+            formData.append('Brand', 'ASSUME Perfumes Store');
+            formData.append('Customer Name', custName);
+            formData.append('Email ID', currentUser.email);
+            formData.append('Phone Number', custPhone);
+            formData.append('Delivery City', custCity);
+            formData.append('Full Address', custAddress);
+            formData.append('Items Details Line', document.getElementById('checkoutItemsDetails').value);
+
+            fetch(FORMSPREE_ENDPOINT, {
+                method: 'POST',
+                body: formData,
+                headers: { 'Accept': 'application/json' }
+            })
+            .then(response => {
+                if (response.ok) {
+                    cart.forEach(item => {
+                        orders.push({
+                            perfumeName: `${item.name} (x${item.qty})`,
+                            perfumeImg: item.img,
+                            price: `Rs. ${(item.price * item.qty).toLocaleString()}`,
+                            date: new Date().toLocaleDateString()
+                        });
+                    });
+                    localStorage.setItem('assume_orders', JSON.stringify(orders));
+                    
+                    cart = [];
+                    updateCartUI();
+                    closeCheckoutModal();
+                    document.getElementById('checkoutForm').reset();
+                    showSuccessOverlay(true);
+                } else {
+                    showSuccessOverlay(false, "Submission Issue. Check Endpoint config.");
+                }
+            })
+            .catch(() => showSuccessOverlay(false, "Network connection broken."))
+            .finally(() => {
+                submitBtn.disabled = false;
+                submitBtn.innerText = "Place Order";
+            });
+        }
+
+        // Interface Controllers
+        function checkAutoLogin() {
+            const savedUser = localStorage.getItem('assume_user');
+            const savedOrders = localStorage.getItem('assume_orders');
+            if(savedUser) {
+                currentUser = JSON.parse(savedUser);
+                updateAuthButton(currentUser.name);
+            }
+            if(savedOrders) orders = JSON.parse(savedOrders);
+        }
+
+        function updateAuthButton(name) {
+            const authBtn = document.getElementById('authBtn');
+            authBtn.innerHTML = `<i class="fa-solid fa-user"></i> Your Profile`;
+            authBtn.className = "bg-white/10 text-white border border-white/20 px-5 py-2 rounded-full font-semibold text-sm hover:bg-white/20 transition-all duration-300 flex items-center gap-2";
+        }
+
+        function openAuthModal() {
+            if(currentUser) openProfileModal();
+            else document.getElementById('authModal').classList.remove('hidden');
+        }
+        function closeAuthModal() {
+            document.getElementById('authModal').classList.add('hidden');
+            document.getElementById('manualEmail').value = '';
+            document.getElementById('manualSignUpBtn').classList.add('hidden');
+        }
+
+        function checkEmailInput() {
+            const emailValue = document.getElementById('manualEmail').value.trim();
+            const signUpBtn = document.getElementById('manualSignUpBtn');
+            if (emailValue.toLowerCase().endsWith('.com')) {
+                signUpBtn.classList.remove('hidden');
+                signUpBtn.classList.add('animate__animated', 'animate__fadeIn');
+            } else {
+                signUpBtn.classList.add('hidden');
+            }
+        }
+
+        function loginWith(name, email) {
+            currentUser = { name, email };
+            localStorage.setItem('assume_user', JSON.stringify(currentUser));
+            updateAuthButton(name);
+        }
+
+        function openDetails(id) {
+            const p = perfumes.find(item => item.id === id);
+            document.getElementById('detailImg').src = p.img;
+            document.getElementById('detailName').innerText = p.name;
+            document.getElementById('detailPrice').innerText = `Rs. ${p.price.toLocaleString()}`;
+            document.getElementById('detailDesc').innerText = p.desc;
+            document.getElementById('detailBuyBtn').setAttribute('onclick', `closeDetailsModal(); handleDirectBuy(${p.id});`);
+            document.getElementById('detailsModal').classList.remove('hidden');
+        }
+        function closeDetailsModal() { document.getElementById('detailsModal').classList.add('hidden'); }
+
+        function showSuccessOverlay(isSuccess, errorMsg = "") {
+            const overlay = document.getElementById('orderSuccessOverlay');
+            const icon = document.getElementById('successIcon');
+            const title = document.getElementById('successTitle');
+            const msg = document.getElementById('successMsg');
+
+            if (isSuccess) {
+                icon.className = "w-20 h-20 bg-emerald-500/10 border-2 border-emerald-500 rounded-full flex items-center justify-center mb-4 text-emerald-500 text-4xl";
+                icon.innerHTML = '<i class="fa-solid fa-check"></i>';
+                title.innerText = "Order Placed!";
+                msg.innerText = "Your cart items details transmitted safely.";
+            } else {
+                icon.className = "w-20 h-20 bg-red-500/10 border-2 border-red-500 rounded-full flex items-center justify-center mb-4 text-red-500 text-4xl";
+                icon.innerHTML = '<i class="fa-solid fa-xmark"></i>';
+                title.innerText = "Order Failed";
+                msg.innerText = errorMsg;
+            }
+            overlay.classList.remove('hidden');
+            setTimeout(() => {
+                overlay.classList.add('animate__animated', 'animate__fadeOut');
+                setTimeout(() => {
+                    overlay.classList.add('hidden');
+                    overlay.classList.remove('animate__animated', 'animate__fadeOut');
+                }, 500);
+            }, 3000);
+        }
+
+        function openProfileModal() {
+            if(!currentUser) return;
+            document.getElementById('profileUserName').innerText = currentUser.name;
+            document.getElementById('profileUserEmail').innerText = currentUser.email;
+
+            const orderContainer = document.getElementById('orderContainer');
+            if(orders.length === 0) {
+                orderContainer.innerHTML = '<p class="text-gray-500 text-center py-4">No orders placed yet.</p>';
+            } else {
+                orderContainer.innerHTML = '';
+                orders.forEach(o => {
+                    orderContainer.innerHTML += `
+                        <div class="flex items-center gap-4 bg-white/5 border border-white/5 p-3 rounded-xl">
+                            <img src="${o.perfumeImg}" class="w-12 h-12 object-cover rounded-lg border border-white/10" alt="${o.perfumeName}">
+                            <div class="flex-grow">
+                                <h5 class="text-sm font-semibold text-white">${o.perfumeName}</h5>
+                                <p class="text-xs text-gray-400">${o.date}</p>
+                            </div>
+                            <span class="text-[#d4a359] font-semibold text-sm">${o.price}</span>
+                        </div>
+                    `;
+                });
+            }
+            document.getElementById('profileModal').classList.remove('hidden');
+        }
+        function closeProfileModal() { document.getElementById('profileModal').classList.add('hidden'); }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            renderPerfumes();
+            checkAutoLogin();
+            setTimeout(() => {
+                const preloader = document.getElementById('preloader');
+                if (preloader) {
+                    preloader.style.opacity = '0';
+                    setTimeout(() => preloader.style.display = 'none', 500);
+                }
+            }, 4000);
+        });
+    </script>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth, createUserWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDPJDpo8SHbF37cizwvgSeI6JN0CAsIBCc",
+            authDomain: "assume-official.firebaseapp.com",
+            projectId: "assume-official",
+            storageBucket: "assume-official.firebasestorage.app",
+            messagingSenderId: "932845781403",
+            appId: "1:932845781403:web:2bb867a8fa5bdc0c4ea13e",
+            measurementId: "G-SRKLLTE3GN"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const provider = new GoogleAuthProvider();
+
+        window.simulateGoogleLogin = function() {
+            signInWithPopup(auth, provider)
+                .then((result) => {
+                    const user = result.user;
+                    loginWith(user.displayName, user.email);
+                    document.getElementById('authModal').classList.add('hidden');
+                }).catch((error) => alert("Google Login Error: " + error.message));
+        }
+
+        window.handleManualSignUp = function() {
+            const email = document.getElementById('manualEmail').value.trim();
+            const dummyPassword = "Password123!";
+
+            createUserWithEmailAndPassword(auth, email, dummyPassword)
+                .then((userCredential) => {
+                    const user = userCredential.user;
+                    const generatedName = email.split('@')[0];
+                    const capitalizedName = generatedName.charAt(0).toUpperCase() + generatedName.slice(1);
+                    loginWith(capitalizedName, user.email);
+                    closeAuthModal();
+                })
+                .catch((error) => alert("Sign Up Error: " + error.message));
+        }
+
+        window.handleLogout = function() {
+            signOut(auth).then(() => {
+                currentUser = null;
+                cart = [];
+                updateCartUI();
+                localStorage.removeItem('assume_user');
+                
+                const authBtn = document.getElementById('authBtn');
+                authBtn.innerHTML = `<i class="fa-solid fa-user-plus"></i> Sign Up`;
+                authBtn.className = "bg-[#d4a359] text-black px-5 py-2 rounded-full font-semibold text-sm hover:bg-white transition-all duration-300 flex items-center gap-2";
+                
+                closeProfileModal();
+                alert("Logged out successfully!");
+            }).catch((error) => alert("Logout Error: " + error.message));
+        }
+
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                currentUser = { 
+                    name: user.displayName || user.email.split('@')[0], 
+                    email: user.email 
+                };
+                localStorage.setItem('assume_user', JSON.stringify(currentUser));
+                updateAuthButton(currentUser.name);
+            }
+        });
+    </script>
+</body>
+</html>
