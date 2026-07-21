@@ -71,6 +71,31 @@
             background: #d4a359;
             border-radius: 10px;
         }
+
+        /* Guest Button Custom Style */
+        .btn-guest {
+            width: 100%;
+            background-color: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #d1d5db;
+            font-weight: 600;
+            padding: 12px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .btn-guest:hover {
+            border-color: #d4a359;
+            color: #d4a359;
+        }
+        .btn-guest:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
     </style>
 </head>
 <body class="overflow-x-hidden">
@@ -206,7 +231,14 @@
                     </button>
                 </div>
 
-               
+                <div class="relative my-6 flex items-center justify-center">
+                    <hr class="w-full border-white/10">
+                    <span class="absolute bg-[#18181c] px-3 text-xs text-gray-500 uppercase">OR</span>
+                </div>
+
+                <button id="guestBtn" onclick="handleGuestLogin()" class="btn-guest">
+                    <i class="fa-solid fa-user-secret"></i> Continue as Guest
+                </button>
             </div>
         </div>
     </div>
@@ -288,6 +320,16 @@
     </div>
 
     <script>
+        window.addEventListener('load', () => {
+            const preloader = document.getElementById('preloader');
+            setTimeout(() => {
+                preloader.style.opacity = '0';
+                preloader.style.visibility = 'hidden';
+            }, 3500);
+            checkAutoLogin();
+            renderPerfumes();
+        });
+
         const perfumes = [
             { id: 1, name: "Midnight Oud (For Men) 50ml", price: 2500, img: "images/midnight oud.png", desc: "A deep mystery of premium dark agarwood blended with patchouli and smoky incense for an unforgettable impact." },
             { id: 2, name: "Royal Rose (For Women) 50ml", price: 2500, img: "images/royal rose.png", desc: "Fresh velvety roses infused with premium sweet honey and rich amber base." },
@@ -351,7 +393,7 @@
 
         function addToCart(id) {
             if(!currentUser) {
-                alert("Please Sign Up first to add items to your cart.");
+                alert("Please Sign Up or Continue as Guest first to add items to your cart.");
                 openAuthModal();
                 return;
             }
@@ -420,7 +462,7 @@
 
         function handleDirectBuy(id) {
             if(!currentUser) {
-                alert("Please Sign Up first to complete purchase.");
+                alert("Please Sign Up or Continue as Guest first to complete purchase.");
                 openAuthModal();
                 return;
             }
@@ -437,7 +479,6 @@
             }
             toggleCartSidebar(false);
             
-            // Build text formatting statement for Formspree field
             let formattedItems = cart.map(i => `${i.name} (x${i.qty}) - Rs.${(i.price*i.qty).toLocaleString()}`).join(', ');
             document.getElementById('checkoutItemsDetails').value = formattedItems + ` | Grand Total: ${document.getElementById('cartTotalPrice').innerText}`;
             
@@ -458,7 +499,6 @@
             const custCity = document.getElementById('custCity').value;
             const custAddress = document.getElementById('custAddress').value;
             const custPhone = document.getElementById('custPhone').value;
-            const totalBill = document.getElementById('cartTotalPrice').innerText;
 
             const formData = new FormData();
             formData.append('Brand', 'ASSUME Perfumes Store');
@@ -515,7 +555,7 @@
 
         function updateAuthButton(name) {
             const authBtn = document.getElementById('authBtn');
-            authBtn.innerHTML = `<i class="fa-solid fa-user"></i> Your Profile`;
+            authBtn.innerHTML = `<i class="fa-solid fa-user"></i> ${name}`;
             authBtn.className = "bg-white/10 text-white border border-white/20 px-5 py-2 rounded-full font-semibold text-sm hover:bg-white/20 transition-all duration-300 flex items-center gap-2";
         }
 
@@ -523,6 +563,7 @@
             if(currentUser) openProfileModal();
             else document.getElementById('authModal').classList.remove('hidden');
         }
+
         function closeAuthModal() {
             document.getElementById('authModal').classList.add('hidden');
             document.getElementById('manualEmail').value = '';
@@ -540,6 +581,32 @@
             }
         }
 
+        function handleManualSignUp() {
+            const email = document.getElementById('manualEmail').value.trim();
+            if(email) {
+                const name = email.split('@')[0];
+                loginWith(name, email);
+                closeAuthModal();
+            }
+        }
+
+        /* ADDED: Guest Login Logic Function */
+        function handleGuestLogin() {
+            const guestBtn = document.getElementById('guestBtn');
+            guestBtn.disabled = true;
+            guestBtn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Processing...`;
+
+            setTimeout(() => {
+                loginWith("Guest User", "guest@assumeperfumes.com");
+                closeAuthModal();
+
+                guestBtn.disabled = false;
+                guestBtn.innerHTML = `<i class="fa-solid fa-user-secret"></i> Continue as Guest`;
+
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }, 2000);
+        }
+
         function loginWith(name, email) {
             currentUser = { name, email };
             localStorage.setItem('assume_user', JSON.stringify(currentUser));
@@ -555,37 +622,12 @@
             document.getElementById('detailBuyBtn').setAttribute('onclick', `closeDetailsModal(); handleDirectBuy(${p.id});`);
             document.getElementById('detailsModal').classList.remove('hidden');
         }
-        function closeDetailsModal() { document.getElementById('detailsModal').classList.add('hidden'); }
 
-        function showSuccessOverlay(isSuccess, errorMsg = "") {
-            const overlay = document.getElementById('orderSuccessOverlay');
-            const icon = document.getElementById('successIcon');
-            const title = document.getElementById('successTitle');
-            const msg = document.getElementById('successMsg');
-
-            if (isSuccess) {
-                icon.className = "w-20 h-20 bg-emerald-500/10 border-2 border-emerald-500 rounded-full flex items-center justify-center mb-4 text-emerald-500 text-4xl";
-                icon.innerHTML = '<i class="fa-solid fa-check"></i>';
-                title.innerText = "Order Placed!";
-                msg.innerText = "Your cart items details transmitted safely.";
-            } else {
-                icon.className = "w-20 h-20 bg-red-500/10 border-2 border-red-500 rounded-full flex items-center justify-center mb-4 text-red-500 text-4xl";
-                icon.innerHTML = '<i class="fa-solid fa-xmark"></i>';
-                title.innerText = "Order Failed";
-                msg.innerText = errorMsg;
-            }
-            overlay.classList.remove('hidden');
-            setTimeout(() => {
-                overlay.classList.add('animate__animated', 'animate__fadeOut');
-                setTimeout(() => {
-                    overlay.classList.add('hidden');
-                    overlay.classList.remove('animate__animated', 'animate__fadeOut');
-                }, 500);
-            }, 3000);
+        function closeDetailsModal() {
+            document.getElementById('detailsModal').classList.add('hidden');
         }
 
         function openProfileModal() {
-            if(!currentUser) return;
             document.getElementById('profileUserName').innerText = currentUser.name;
             document.getElementById('profileUserEmail').innerText = currentUser.email;
 
@@ -596,102 +638,55 @@
                 orderContainer.innerHTML = '';
                 orders.forEach(o => {
                     orderContainer.innerHTML += `
-                        <div class="flex items-center gap-4 bg-white/5 border border-white/5 p-3 rounded-xl">
-                            <img src="${o.perfumeImg}" class="w-12 h-12 object-cover rounded-lg border border-white/10" alt="${o.perfumeName}">
+                        <div class="flex items-center gap-3 bg-white/5 p-3 rounded-xl border border-white/5">
+                            <img src="${o.perfumeImg}" class="w-12 h-12 object-cover rounded-lg border border-white/10" alt="">
                             <div class="flex-grow">
                                 <h5 class="text-sm font-semibold text-white">${o.perfumeName}</h5>
-                                <p class="text-xs text-gray-400">${o.date}</p>
+                                <p class="text-xs text-[#d4a359]">${o.price}</p>
                             </div>
-                            <span class="text-[#d4a359] font-semibold text-sm">${o.price}</span>
+                            <span class="text-[10px] text-gray-500">${o.date}</span>
                         </div>
                     `;
                 });
             }
+
             document.getElementById('profileModal').classList.remove('hidden');
         }
-        function closeProfileModal() { document.getElementById('profileModal').classList.add('hidden'); }
 
-        window.addEventListener('DOMContentLoaded', () => {
-            renderPerfumes();
-            checkAutoLogin();
-            setTimeout(() => {
-                const preloader = document.getElementById('preloader');
-                if (preloader) {
-                    preloader.style.opacity = '0';
-                    setTimeout(() => preloader.style.display = 'none', 500);
-                }
-            }, 4000);
-        });
-    </script>
-
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getAuth, createUserWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-
-        const firebaseConfig = {
-            apiKey: "AIzaSyDPJDpo8SHbF37cizwvgSeI6JN0CAsIBCc",
-            authDomain: "assume-official.firebaseapp.com",
-            projectId: "assume-official",
-            storageBucket: "assume-official.firebasestorage.app",
-            messagingSenderId: "932845781403",
-            appId: "1:932845781403:web:2bb867a8fa5bdc0c4ea13e",
-            measurementId: "G-SRKLLTE3GN"
-        };
-
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const provider = new GoogleAuthProvider();
-
-        window.simulateGoogleLogin = function() {
-            signInWithPopup(auth, provider)
-                .then((result) => {
-                    const user = result.user;
-                    loginWith(user.displayName, user.email);
-                    document.getElementById('authModal').classList.add('hidden');
-                }).catch((error) => alert("Google Login Error: " + error.message));
+        function closeProfileModal() {
+            document.getElementById('profileModal').classList.add('hidden');
         }
 
-        window.handleManualSignUp = function() {
-            const email = document.getElementById('manualEmail').value.trim();
-            const dummyPassword = "Password123!";
-
-            createUserWithEmailAndPassword(auth, email, dummyPassword)
-                .then((userCredential) => {
-                    const user = userCredential.user;
-                    const generatedName = email.split('@')[0];
-                    const capitalizedName = generatedName.charAt(0).toUpperCase() + generatedName.slice(1);
-                    loginWith(capitalizedName, user.email);
-                    closeAuthModal();
-                })
-                .catch((error) => alert("Sign Up Error: " + error.message));
+        function handleLogout() {
+            localStorage.removeItem('assume_user');
+            currentUser = null;
+            const authBtn = document.getElementById('authBtn');
+            authBtn.innerHTML = `<i class="fa-solid fa-user-plus"></i> Sign Up`;
+            authBtn.className = "bg-[#d4a359] text-black px-5 py-2 rounded-full font-semibold text-sm hover:bg-white transition-all duration-300 flex items-center gap-2";
+            closeProfileModal();
         }
 
-        window.handleLogout = function() {
-            signOut(auth).then(() => {
-                currentUser = null;
-                cart = [];
-                updateCartUI();
-                localStorage.removeItem('assume_user');
-                
-                const authBtn = document.getElementById('authBtn');
-                authBtn.innerHTML = `<i class="fa-solid fa-user-plus"></i> Sign Up`;
-                authBtn.className = "bg-[#d4a359] text-black px-5 py-2 rounded-full font-semibold text-sm hover:bg-white transition-all duration-300 flex items-center gap-2";
-                
-                closeProfileModal();
-                alert("Logged out successfully!");
-            }).catch((error) => alert("Logout Error: " + error.message));
-        }
+        function showSuccessOverlay(success, customMsg = null) {
+            const overlay = document.getElementById('orderSuccessOverlay');
+            const icon = document.getElementById('successIcon');
+            const title = document.getElementById('successTitle');
+            const msg = document.getElementById('successMsg');
 
-        onAuthStateChanged(auth, (user) => {
-            if (user) {
-                currentUser = { 
-                    name: user.displayName || user.email.split('@')[0], 
-                    email: user.email 
-                };
-                localStorage.setItem('assume_user', JSON.stringify(currentUser));
-                updateAuthButton(currentUser.name);
+            if(success) {
+                icon.className = "w-20 h-20 bg-emerald-500/10 border-2 border-emerald-500 rounded-full flex items-center justify-center mb-4 text-emerald-500 text-4xl animate__animated animate__bounceIn";
+                icon.innerHTML = `<i class="fa-solid fa-check"></i>`;
+                title.innerText = "Order Placed!";
+                msg.innerText = "Your order has been placed successfully.";
+            } else {
+                icon.className = "w-20 h-20 bg-red-500/10 border-2 border-red-500 rounded-full flex items-center justify-center mb-4 text-red-500 text-4xl animate__animated animate__shakeX";
+                icon.innerHTML = `<i class="fa-solid fa-xmark"></i>`;
+                title.innerText = "Failed!";
+                msg.innerText = customMsg || "Failed to place order.";
             }
-        });
+
+            overlay.classList.remove('hidden');
+            setTimeout(() => overlay.classList.add('hidden'), 3500);
+        }
     </script>
 </body>
 </html>
