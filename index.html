@@ -96,6 +96,176 @@
             opacity: 0.6;
             cursor: not-allowed;
         }
+
+/* Google Font */
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;600;700&display=swap');
+
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+
+body{
+    background:black;
+}
+
+
+
+/*============ SECTION ============*/
+
+.why-assume{
+
+    width:100%;
+    padding:80px 8%;
+    text-align:center;
+
+}
+
+
+.section-title h2{
+
+    font-size:45px;
+    color:white;
+    margin-bottom:15px;
+    letter-spacing:1px;
+
+}
+
+
+.section-title p{
+
+    color:#d1d1d1;
+    font-size:18px;
+    margin-bottom:60px;
+
+}
+
+
+
+/*============ CARDS ============*/
+
+
+.trust-section{
+
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(230px,1fr));
+    gap:25px;
+
+}
+
+
+
+.trust-card{
+
+    padding:35px 25px;
+    border-radius:25px;
+
+    background:rgba(255,255,255,0.08);
+
+    backdrop-filter:blur(20px);
+
+    border:1px solid rgba(255,255,255,0.1);
+
+    transition:.5s ease;
+
+    cursor:pointer;
+
+    box-shadow:
+    0 0 20px rgba(255,255,255,.05);
+
+}
+
+
+.trust-card:hover{
+
+    transform:translateY(-15px);
+
+    box-shadow:
+    0 0 35px rgba(255,255,255,.15);
+
+}
+
+
+.trust-card span{
+
+    font-size:50px;
+    display:block;
+    margin-bottom:20px;
+
+    animation: floating 3s ease infinite;
+
+}
+
+
+.trust-card h3{
+
+    color:white;
+    font-size:22px;
+    line-height:32px;
+
+}
+
+
+
+/*============ ICON ANIMATION ============*/
+
+
+@keyframes floating{
+
+    0%{
+
+        transform:translateY(0px);
+
+    }
+
+    50%{
+
+        transform:translateY(-8px);
+
+    }
+
+    100%{
+
+        transform:translateY(0px);
+
+    }
+
+}
+
+
+
+/*============ RESPONSIVE ============*/
+
+
+@media(max-width:768px){
+
+.section-title h2{
+
+    font-size:35px;
+
+}
+
+
+.section-title p{
+
+    font-size:16px;
+
+}
+
+
+.trust-card{
+
+    padding:30px 20px;
+
+}
+
+}
+        
     </style>
 </head>
 <body class="overflow-x-hidden">
@@ -175,6 +345,46 @@
         </div>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="perfumeContainer"></div>
     </section>
+
+<section class="why-assume">
+
+    <div class="section-title">
+        <h2>Why Choose ASSUME?</h2>
+        <p>Premium fragrances with trusted service across Pakistan.</p>
+    </div>
+
+    <div class="trust-section">
+
+        <div class="trust-card">
+            <span>💵</span>
+            <h3>Cash On Delivery</h3>
+        </div>
+
+        <div class="trust-card">
+            <span>✨</span>
+            <h3>100% Original Fragrances</h3>
+        </div>
+
+        <div class="trust-card">
+            <span>🔒</span>
+            <h3>Secure Checkout</h3>
+        </div>
+
+        <div class="trust-card">
+            <span>🚚</span>
+            <h3>Delivery All Over Pakistan</h3>
+        </div>
+
+        <div class="trust-card">
+            <span>⭐</span>
+            <h3>Trusted Across Pakistan</h3>
+        </div>
+
+    </div>
+
+</section>
+
+    
 
     <section id="contact" class="py-20 px-6 bg-black/50 border-t border-white/5">
         <div class="max-w-4xl mx-auto">
