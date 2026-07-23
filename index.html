@@ -290,6 +290,140 @@ body{
     }
 
 }
+
+.reviews-section{
+
+padding:80px 8%;
+text-align:center;
+
+}
+
+
+.reviews-section h2{
+
+font-size:42px;
+margin-bottom:10px;
+
+}
+
+
+.reviews-section p{
+
+font-size:18px;
+opacity:0.8;
+margin-bottom:50px;
+
+}
+
+
+.reviews-container{
+
+display:flex;
+justify-content:center;
+gap:30px;
+flex-wrap:wrap;
+
+}
+
+
+.review-card{
+
+width:320px;
+padding:30px;
+border-radius:25px;
+
+background:rgba(255,255,255,0.05);
+
+backdrop-filter:blur(15px);
+
+border:1px solid rgba(255,255,255,0.1);
+
+box-shadow:0 10px 30px rgba(0,0,0,0.3);
+
+transition:.4s ease;
+
+}
+
+
+.review-card:hover{
+
+transform:translateY(-10px);
+
+}
+
+
+.stars{
+
+font-size:28px;
+margin-bottom:15px;
+
+}
+
+
+.verified{
+
+display:inline-block;
+
+padding:8px 18px;
+
+border-radius:30px;
+
+background:#0d6efd;
+
+color:white;
+
+font-size:14px;
+
+margin-bottom:20px;
+
+}
+
+
+.review-card h3{
+
+font-size:25px;
+margin-bottom:5px;
+
+}
+
+
+.review-card h4{
+
+font-size:16px;
+opacity:0.7;
+margin-bottom:25px;
+
+}
+
+
+.review-card p{
+
+line-height:1.8;
+font-size:16px;
+
+}
+
+
+
+@media(max-width:768px){
+
+
+.review-card{
+
+width:100%;
+
+}
+
+
+.reviews-section h2{
+
+font-size:32px;
+
+}
+
+
+}
+    
         
     </style>
 </head>
@@ -410,7 +544,63 @@ body{
 
 </section>
 
-    
+      <section class="reviews-section">
+
+        <h2>What Our Customers Say</h2>
+        <p>Trusted By Customers Across Pakistan</p>
+        
+        <div class="reviews-container">
+        
+        <div class="review-card">
+        
+        <div class="stars">★★★★★</div>
+        <span class="verified">✔ Verified Purchase</span>
+        
+        <h3>Ali Raza</h3>
+        <h4>Karachi, Pakistan</h4>
+        
+        <p>
+        "The fragrance lasted for hours and the
+        premium packaging exceeded my expectations.
+        Highly recommended!"
+        </p>
+        
+        </div>
+        
+        
+        <div class="review-card">
+        
+        <div class="stars">★★★★★</div>
+        <span class="verified">✔ Verified Purchase</span>
+        
+        <h3>Ahmed Khan</h3>
+        <h4>Hyderabad, Pakistan</h4>
+        
+        <p>
+            "I ordered Aqua Marine for Men (50ml) and was genuinely impressed. The scent feels premium and stays for hours. It's perfect for both casual and formal occasions.
+        </p>
+        
+        </div>
+        
+        
+        <div class="review-card">
+        
+        <div class="stars">★★★★★</div>
+        <span class="verified">✔ Verified Purchase</span>
+        
+        <h3>Muhammad Hamza</h3>
+        <h4>Lahore, Pakistan</h4>
+        
+        <p>
+        "I received compliments on the very first day.
+        Definitely ordering again."
+        </p>
+        
+        </div>
+        
+        </div>
+        
+        </section>
 
     <section id="contact" class="py-20 px-6 bg-black/50 border-t border-white/5">
         <div class="max-w-4xl mx-auto">
