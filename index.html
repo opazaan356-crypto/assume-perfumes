@@ -423,6 +423,136 @@ font-size:32px;
 
 
 }
+.faq-section{
+
+padding:90px 8%;
+text-align:center;
+
+}
+
+
+.faq-section h2{
+
+font-size:42px;
+margin-bottom:15px;
+
+}
+
+
+.faq-section p{
+
+font-size:18px;
+opacity:.8;
+margin-bottom:50px;
+
+}
+
+
+.faq-container{
+
+max-width:900px;
+margin:auto;
+
+}
+
+
+.faq-item{
+
+margin-bottom:20px;
+border-radius:20px;
+overflow:hidden;
+border:1px solid rgba(255,255,255,.1);
+
+background:rgba(255,255,255,.05);
+
+backdrop-filter:blur(15px);
+
+box-shadow:0 10px 30px rgba(0,0,0,.25);
+
+}
+
+
+.faq-item summary{
+
+list-style:none;
+cursor:pointer;
+padding:25px;
+font-size:20px;
+font-weight:600;
+text-align:left;
+position:relative;
+
+}
+
+
+.faq-item summary::-webkit-details-marker{
+
+display:none;
+
+}
+
+
+.faq-item summary::after{
+
+content:"+";
+position:absolute;
+right:25px;
+font-size:28px;
+transition:.3s;
+
+}
+
+
+.faq-item[open] summary::after{
+
+content:"−";
+
+}
+
+
+.faq-item p{
+
+padding:0 25px 25px;
+text-align:left;
+line-height:1.8;
+font-size:17px;
+margin:0;
+
+}
+
+
+/* MOBILE RESPONSIVE */
+
+
+@media(max-width:768px){
+
+.faq-section{
+
+    padding:70px 20px;
+
+}
+
+.faq-section h2{
+
+    font-size:32px;
+
+}
+
+.faq-section p{
+
+    font-size:16px;
+
+}
+
+.faq-item summary{
+
+    font-size:17px;
+    padding:20px;
+
+}
+
+}
+        
     
         
     </style>
@@ -601,6 +731,47 @@ font-size:32px;
         </div>
         
         </section>
+
+      <section class="faq-section">
+
+        <h2>Frequently Asked Questions</h2>
+        <p>Everything you need to know before placing your order.</p>
+    
+        <div class="faq-container">
+    
+            <details class="faq-item">
+                <summary>How long does delivery take?</summary>
+                <p>Delivery usually takes 3–4 working days across Pakistan.</p>
+            </details>
+    
+            <details class="faq-item">
+                <summary>Do you offer Cash on Delivery?</summary>
+                <p>Yes, Cash on Delivery (COD) is available all over Pakistan.</p>
+            </details>
+    
+            <details class="faq-item">
+                <summary>Are your fragrances long-lasting?</summary>
+                <p>Yes, our fragrances are crafted using premium-quality fragrance oils for a long-lasting experience.</p>
+            </details>
+    
+            <details class="faq-item">
+                <summary>Do you deliver all over Pakistan?</summary>
+                <p>Yes, we proudly deliver our fragrances nationwide.</p>
+            </details>
+    
+            <details class="faq-item">
+                <summary>Are ASSUME perfumes suitable for daily wear?</summary>
+                <p>Absolutely! Our fragrances are designed for both daily wear and special occasions.</p>
+            </details>
+    
+            <details class="faq-item">
+                <summary>How can I contact customer support?</summary>
+                <p>You can easily contact us through WhatsApp or our Contact Us section.</p>
+            </details>
+    
+        </div>
+    
+    </section>
 
     <section id="contact" class="py-20 px-6 bg-black/50 border-t border-white/5">
         <div class="max-w-4xl mx-auto">
