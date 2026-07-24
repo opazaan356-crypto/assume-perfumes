@@ -554,6 +554,275 @@ margin:0;
 }
         
     
+.replacement-policy{
+
+padding:100px 8%;
+text-align:center;
+overflow:hidden;
+
+}
+
+
+
+.replacement-policy h2{
+
+font-size:48px;
+margin-bottom:20px;
+
+}
+
+
+
+.policy-description{
+
+max-width:800px;
+margin:auto;
+line-height:1.8;
+font-size:18px;
+opacity:.85;
+margin-bottom:70px;
+
+}
+
+
+
+/*==========================
+CARDS
+===========================*/
+
+
+.policy-container{
+
+display:flex;
+gap:40px;
+justify-content:center;
+flex-wrap:wrap;
+
+}
+
+
+.policy-card{
+
+width:450px;
+padding:35px;
+border-radius:30px;
+
+background:rgba(255,255,255,.05);
+
+backdrop-filter:blur(18px);
+
+border:1px solid rgba(255,255,255,.15);
+
+box-shadow:0 20px 40px rgba(0,0,0,.25);
+
+transition:.5s ease;
+
+animation:floatCard 4s ease-in-out infinite;
+
+}
+
+
+
+.policy-card:hover{
+
+transform:translateY(-15px);
+
+box-shadow:0 30px 60px rgba(255,255,255,.15);
+
+}
+
+
+.policy-card h3{
+
+font-size:28px;
+margin-bottom:25px;
+
+}
+
+
+.policy-card ul{
+
+list-style:none;
+padding:0;
+margin:0;
+
+}
+
+
+.policy-card ul li{
+
+padding:15px 0;
+font-size:18px;
+line-height:1.8;
+
+}
+
+
+
+/*==========================
+IMPORTANT NOTICE
+===========================*/
+
+
+.important-note{
+
+max-width:1000px;
+margin:70px auto 0;
+
+padding:40px;
+
+border-radius:30px;
+
+background:rgba(255,255,255,.05);
+
+backdrop-filter:blur(18px);
+
+border:1px solid rgba(255,255,255,.15);
+
+box-shadow:0 20px 40px rgba(0,0,0,.25);
+
+animation:glow 4s infinite alternate;
+
+}
+
+
+.important-note h3{
+
+font-size:32px;
+margin-bottom:25px;
+
+}
+
+
+.important-note p{
+
+font-size:18px;
+line-height:2;
+
+}
+
+
+
+/*==========================
+ANIMATIONS
+===========================*/
+
+
+@keyframes floatCard{
+
+
+0%{
+
+    transform:translateY(0px);
+
+}
+
+
+50%{
+
+    transform:translateY(-8px);
+
+}
+
+
+100%{
+
+    transform:translateY(0px);
+
+}
+
+
+}
+
+
+
+@keyframes glow{
+
+
+from{
+
+    box-shadow:0 0 20px rgba(255,255,255,.08);
+
+}
+
+
+to{
+
+    box-shadow:0 0 45px rgba(255,255,255,.18);
+
+}
+
+
+}
+
+
+
+
+/*==========================
+RESPONSIVE DESIGN
+===========================*/
+
+
+@media(max-width:768px){
+
+
+.replacement-policy{
+
+    padding:80px 20px;
+
+}
+
+
+.replacement-policy h2{
+
+    font-size:34px;
+
+}
+
+
+.policy-description{
+
+    font-size:16px;
+
+}
+
+
+.policy-card{
+
+    width:100%;
+
+}
+
+
+.policy-card h3{
+
+    font-size:23px;
+
+}
+
+
+.policy-card ul li{
+
+    font-size:16px;
+
+}
+
+
+.important-note h3{
+
+    font-size:25px;
+
+}
+
+
+.important-note p{
+
+    font-size:16px;
+
+}
+
+
+}
         
     </style>
 </head>
@@ -769,6 +1038,92 @@ margin:0;
             </details>
     
         </div>
+    
+    </section>
+
+    <section class="replacement-policy">
+
+        <h2>Return & Replacement Policy</h2>
+    
+        <p class="policy-description">
+            At ASSUME Perfumes, customer satisfaction is our priority.
+            We offer FREE replacements for eligible cases only.
+        </p>
+    
+    
+        <div class="policy-container">
+    
+            <!-- Replacement Available -->
+    
+            <div class="policy-card available">
+    
+                <h3>FREE REPLACEMENT AVAILABLE</h3>
+    
+                <ul>
+    
+                    <li>✓ Wrong Product Received</li>
+    
+                    <li>✓ Damaged Bottle</li>
+    
+                    <li>✓ Leakage Issues</li>
+    
+                    <li>✓ Manufacturing Defects</li>
+    
+                </ul>
+    
+            </div>
+    
+    
+            <!-- No Return -->
+    
+            <div class="policy-card not-available">
+    
+                <h3>NO RETURN / NO REFUND</h3>
+    
+                <ul>
+    
+                    <li>✕ Fragrance Preference Issues</li>
+    
+                    <li>✕ Opened Products</li>
+    
+                    <li>✕ Used Products</li>
+    
+                    <li>✕ Change Of Mind</li>
+    
+                    <li>✕ Customer Ordering Mistakes</li>
+    
+                </ul>
+    
+            </div>
+    
+        </div>
+    
+    
+    
+        <!-- Important Notice -->
+    
+    
+        <div class="important-note">
+    
+            <h3>Important Notice</h3>
+    
+            <p>
+                Replacement claims must be submitted within
+                <strong>24 Hours</strong> of delivery.
+            </p>
+    
+            <p>
+                An <strong>Unboxing Video</strong> and clear product images are required
+                for all replacement requests.
+            </p>
+    
+            <p>
+                Please note that fragrances are a matter of personal preference.
+                Returns or refunds are not accepted if a customer does not like the scent.
+            </p>
+    
+        </div>
+    
     
     </section>
 
