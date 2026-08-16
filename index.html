@@ -824,7 +824,270 @@ RESPONSIVE DESIGN
 
 }
      
-    
+    /* ==============================
+   HOW TO ORDER SECTION
+============================== */
+
+.how-to-order {
+    width: 100%;
+    padding: 90px 7%;
+    background: #080808;
+    color: #ffffff;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+/* HEADING */
+
+.order-heading {
+    text-align: center;
+    max-width: 700px;
+    margin: 0 auto 55px;
+}
+
+.order-heading span {
+    display: inline-block;
+    font-size: 12px;
+    letter-spacing: 3px;
+    color: #c9a46a;
+    font-weight: 600;
+    margin-bottom: 12px;
+}
+
+.order-heading h2 {
+    margin: 0;
+    font-size: 45px;
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+
+.order-heading p {
+    margin-top: 15px;
+    color: #aaa;
+    font-size: 16px;
+    line-height: 1.7;
+}
+
+
+/* STEPS */
+
+.order-steps {
+    max-width: 1150px;
+    margin: auto;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 25px;
+}
+
+
+/* CARD */
+
+.order-card {
+    position: relative;
+    padding: 42px 30px;
+    text-align: center;
+
+    background: linear-gradient(
+        145deg,
+        #151515,
+        #0c0c0c
+    );
+
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 18px;
+
+    transition: 0.4s ease;
+    overflow: hidden;
+}
+
+.order-card::before {
+    content: "";
+    position: absolute;
+    width: 120px;
+    height: 120px;
+    background: rgba(201,164,106,0.08);
+    border-radius: 50%;
+    top: -60px;
+    right: -60px;
+}
+
+.order-card:hover {
+    transform: translateY(-8px);
+    border-color: rgba(201,164,106,0.5);
+
+    box-shadow:
+        0 20px 45px rgba(0,0,0,0.5);
+}
+
+
+/* NUMBER */
+
+.step-number {
+    position: absolute;
+    top: 18px;
+    left: 22px;
+
+    font-size: 12px;
+    font-weight: bold;
+
+    color: #c9a46a;
+    letter-spacing: 1px;
+}
+
+
+/* ICON */
+
+.order-icon {
+    width: 70px;
+    height: 70px;
+
+    margin: 10px auto 25px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background: rgba(201,164,106,0.1);
+
+    border: 1px solid rgba(201,164,106,0.25);
+
+    font-size: 28px;
+
+    transition: 0.4s ease;
+}
+
+.order-card:hover .order-icon {
+    transform: scale(1.08);
+    background: rgba(201,164,106,0.18);
+}
+
+
+/* TITLE */
+
+.order-card h3 {
+    font-size: 21px;
+    margin: 0 0 14px;
+    color: #ffffff;
+}
+
+
+/* TEXT */
+
+.order-card p {
+    color: #999;
+    font-size: 14px;
+    line-height: 1.7;
+    margin: 0;
+}
+
+
+/* CTA AREA */
+
+.order-bottom {
+    text-align: center;
+    margin: 60px auto 0;
+    max-width: 650px;
+
+    padding: 40px 25px;
+
+    border-top: 1px solid rgba(255,255,255,0.08);
+}
+
+.order-bottom h3 {
+    margin: 0;
+    font-size: 25px;
+}
+
+.order-bottom p {
+    color: #999;
+    margin: 12px 0 25px;
+}
+
+
+/* BUTTON */
+
+.order-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+
+    padding: 14px 28px;
+
+    background: #c9a46a;
+    color: #080808;
+
+    text-decoration: none;
+
+    border-radius: 30px;
+
+    font-size: 14px;
+    font-weight: bold;
+
+    transition: 0.3s ease;
+}
+
+.order-btn span {
+    font-size: 20px;
+    transition: 0.3s ease;
+}
+
+.order-btn:hover {
+    background: #ffffff;
+    transform: translateY(-3px);
+}
+
+.order-btn:hover span {
+    transform: translateX(5px);
+}
+
+
+/* ==============================
+   MOBILE
+============================== */
+
+@media (max-width: 800px) {
+
+    .how-to-order {
+        padding: 65px 5%;
+    }
+
+    .order-heading h2 {
+        font-size: 35px;
+    }
+
+    .order-steps {
+        grid-template-columns: 1fr;
+        gap: 18px;
+    }
+
+    .order-card {
+        padding: 38px 25px;
+    }
+
+    .order-bottom {
+        margin-top: 40px;
+    }
+
+}
+
+@media (max-width: 450px) {
+
+    .order-heading h2 {
+        font-size: 30px;
+    }
+
+    .order-heading p {
+        font-size: 14px;
+    }
+
+    .order-bottom h3 {
+        font-size: 21px;
+    }
+
+}
+
     </style>
 </head>
 <body class="overflow-x-hidden">
@@ -899,7 +1162,7 @@ RESPONSIVE DESIGN
 
     <section id="collection" class="py-24 px-6 md:px-12 max-w-7xl mx-auto">
         <div class="text-center mb-16">
-            <h2 class="text-4xl md:text-6xl font-bold serif-font gradient-text mb-4">Our Signature Collection</h2>
+            <h2 class="text-4xl md:text-6xl font-bold serif-font gradient-text mb-4" id="ras"> Our Signature Collection</h2>
             <p class="text-gray-400">Discover your signature scent from our exclusive 1 masterpieces</p>
         </div>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="perfumeContainer"></div>
@@ -941,6 +1204,83 @@ RESPONSIVE DESIGN
         </div>
 
     </div>
+<!-- HOW TO ORDER SECTION -->
+<section class="how-to-order">
+
+    <div class="order-heading">
+        <span>✦ SIMPLE & EASY</span>
+        <h2>How to Order</h2>
+        <p>
+            Ordering your favorite fragrance from ASSUME is quick, easy,
+            and hassle-free.
+        </p>
+    </div>
+
+    <div class="order-steps">
+
+        <!-- STEP 1 -->
+        <div class="order-card">
+            <div class="step-number">01</div>
+
+            <div class="order-icon">
+                🛍️
+            </div>
+
+            <h3>Choose Your Perfume</h3>
+
+            <p>
+                Browse our collection and select the fragrance
+                you want to purchase.
+            </p>
+        </div>
+
+        <!-- STEP 2 -->
+        <div class="order-card">
+            <div class="step-number">02</div>
+
+            <div class="order-icon">
+                📝
+            </div>
+
+            <h3>Place Your Order</h3>
+
+            <p>
+                Click the <b>Order Now</b> button and enter your
+                required details.
+            </p>
+        </div>
+
+        <!-- STEP 3 -->
+        <div class="order-card">
+            <div class="step-number">03</div>
+
+            <div class="order-icon">
+                🚚
+            </div>
+
+            <h3>After order </h3>
+
+            <p>
+                Then, our team will message you on WhatsApp to confirm the order.
+            </p>
+        </div>
+
+    </div>
+
+    <!-- CTA -->
+    <div class="order-bottom">
+        <h3>Ready to find your signature fragrance?</h3>
+
+        <p>
+            Explore our collection and place your order today.
+        </p>
+
+        <a href="#ras" class="order-btn">
+            Shop Now <span>→</span>
+        </a>
+    </div>
+
+</section>
 
 </section>
 
